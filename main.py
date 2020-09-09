@@ -18,7 +18,7 @@ tasks_dict ={}
 def save_task(task:Tasks):
     task_saved = Tasks(**task.dict())
     return task_saved
-    
+
 
 @app.post("/tasks/", response_model=Tasks)
 async def create_task(task: Tasks):
@@ -28,8 +28,7 @@ async def create_task(task: Tasks):
 
 
 @app.get("/tasks/{task_id}", response_model=Tasks, response_model_exclude_unset=True)
-async def read_task(tas,task_id: int):
-    task_saved = save_task(task)
-    return task_saved 
+async def read_task(task_id :str):
+    return tasks_dict[task_id]
 
 

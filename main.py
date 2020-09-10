@@ -30,7 +30,7 @@ def save_task(task: Tasks):
 
 @app.post("/tasks/", response_model=Tasks, tags=[" Cria tarefas"])
 async def create_task(task: Tasks):
-    task.id= uuid.uuid4()
+    task.id = uuid.uuid4()
     task_saved = save_task(task)
     tasks_dict[task.id] = task_saved
     return task_saved
@@ -64,9 +64,10 @@ async def update_partial_task(uuid: UUID, task: Tasks):
     return updated_item
 
 
-# @app.delete("/tasks/{uuid}")
-# async def delete_task(uuid: UUID, task: Tasks):
-#     del tasks_dict[uuid]
-#     return tasks_dict
+@app.delete("/tasks/{uuid}")
+async def delete_task(uuid: UUID, task: Tasks):
+    print(uuid)
+    tasks_dict.pop(uuid,None)
+    return tasks_dict
 
 

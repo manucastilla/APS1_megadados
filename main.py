@@ -14,7 +14,7 @@ app = FastAPI(title='Lista de Tarefas',)
 
 
 class Tasks(BaseModel):
-    id: UUID = uuid.uuid4()
+    id: UUID = None
     title: str
     description: Optional[str] = None
     done: bool
@@ -30,25 +30,24 @@ def save_task(task: Tasks):
 
 @app.post("/tasks/", response_model=Tasks, tags=[" Cria tarefas"])
 async def create_task(task: Tasks):
+    task.id= uuid.uuid4()
     task_saved = save_task(task)
     tasks_dict[task.id] = task_saved
-    print("KEYYYY:::::")
-    print(task.id)
     return task_saved
 
 
 @app.get("/tasks/{uuid}", response_model=Tasks, response_model_exclude_unset=True, tags=[" Mostra tarefas"])
-async def read_task(uuid: str):
+async def read_task(uuid: UUID):
     return tasks_dict[uuid]
 
 
-@app.get("/tasks", tags=[" Mostra tarefas"])
+@app.get("/tasks",tags=[" Mostra tarefas"])
 async def read_tasks():
     return tasks_dict
 
 
 @app.put("/tasks/{uuid}")
-async def update_task(uuid: str, task: Tasks):
+async def update_task(uuid: UUID, task: Tasks):
     # update_item_encoded = tasks_dict[task.id]  # usa json ou não
     update_item_encoded = jsonable_encoder(task)
     tasks_dict[task.id] = update_item_encoded
@@ -56,7 +55,7 @@ async def update_task(uuid: str, task: Tasks):
 
 
 @app.patch("/tasks/{uuid}")
-async def update_partial_task(uuid: str, task: Tasks):
+async def update_partial_task(uuid: UUID, task: Tasks):
     stored_item_data = tasks_dict[uuid]
     stored_item_model = Tasks(**stored_item_data)
     update_data = task.dict(exclude_unset=True)
@@ -66,4 +65,8 @@ async def update_partial_task(uuid: str, task: Tasks):
 
 
 # @app.delete("/tasks/{uuid}")
-# async def delete_task(uuid: str, task: Tasks):
+# async def delete_task(uuid: UUID, task: Tasks):
+#     del tasks_dict[uuid]
+#     return tasks_dict
+
+

@@ -8,8 +8,8 @@ class DBSession:
     tasks = {}
     def __init__(self):
         self.tasks = DBSession.tasks
-    def get_db():
-        return DBSession()
+def get_db():
+    return DBSession()
 
 def test_read_main_returns_not_found():
     response = client.get('/')

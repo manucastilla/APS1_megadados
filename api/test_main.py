@@ -5,29 +5,62 @@ import uuid
 client = TestClient(app)
 
 # ============ POST ============ #
-uuids= []
+uuids = []
 def test_create_task():
     tasks = [
         {
-            'description':'teste1',
-            'completed':False
+            'description': 'teste1',
+            'completed': False
         },
         {
-            'description':'teste2',
-            'completed':True
+            'description': 'teste2',
+            'completed': True
         },
         {
-            'description':'teste3'
+            'description': 'teste3'
         },
         {
-            'completed':False
+            'completed': False
         },
     ]
-    
+
+    tasks_teste = [
+        {
+            'description': 'teste1',
+            'completed': False
+        },
+        {
+            'description': 'teste2',
+            'completed': True
+        },
+        {
+            'description': 'teste3',
+            'completed': False
+        },
+        {
+            'description': 'no description',
+            'completed': False
+        },
+        {
+            'description': 'no description',
+            'completed': False
+        }
+    ]
+
     for task in tasks:
         response = client.post("/task",json=task)
         assert response.status_code == 200
         uuids.append(response.json())
+
+    dict_temp = {}
+    for uuid_, response in zip(uuids, tasks_teste):
+        dict_temp[uuid_] = response
+    
+    response = client.get('/task')
+    assert response.status_code == 200
+    assert response.json() == dict_temp
+
+    
 
 # ============ GET ============ #
 
@@ -69,12 +102,20 @@ def test_change_task():
 
 # ============ PUT ============ #
 
-def change_whole_task_id_not_found():
+
+def test_change_whole_task_id_not_found():
     uuid_ = uuid.uuid4()
-    new_task= {'description':'teste put', 'completed': True}
-    response = client.put(f"/task/{uuid_}",json=new_task)
+    new_task= {'description':'teste patch', 'completed': True}
+    response = client.patch(f"/task/{uuid_}",json=new_task)
     assert response.status_code == 404
     assert response.json() == {"detail": "Task not found"}
+
+def test_change_whole_task():
+    for tid in uuids:
+        new_task= {'description':'teste patch'}
+        response = client.patch(f"/task/{tid}", json=new_task)
+        assert response.status_code == 200
+
 
 # ============ DELETE ============ #
 
@@ -89,13 +130,5 @@ def test_delete_task():
     for tid in uuids:
         response = client.delete(f"/task/{tid}")
         assert response.status_code == 200
-
-
-
-
-
-
-    
-
 
 

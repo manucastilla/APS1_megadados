@@ -60,7 +60,15 @@ def test_create_task():
     assert response.status_code == 200
     assert response.json() == dict_temp
 
-    
+    #deletar para não haver problema
+    for u in uuids:
+        response = client.delete(f"/task/{u}")
+        assert response.status_code == 200
+
+    #checar se não há mais teste
+    response = client.get('/task')
+    assert response.status_code == 200
+    assert response.json() == {}
 
 # ============ GET ============ #
 

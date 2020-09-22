@@ -69,12 +69,18 @@ def test_change_task():
 
 # ============ PUT ============ #
 
-def change_whole_task_id_not_found():
+def test_change_whole_task_id_not_found():
     uuid_ = uuid.uuid4()
     new_task= {'description':'teste put', 'completed': True}
     response = client.put(f"/task/{uuid_}",json=new_task)
-    assert response.status_code == 404
-    assert response.json() == {"detail": "Task not found"}
+    assert response.status_code == 200
+
+def test_change_whole_task():
+    new_task= {'description':'teste put', 'completed': True}
+    for tid in uuids:
+        new_task= {'description':'teste patch'}
+        response = client.patch(f"/task/{tid}", json=new_task)
+        assert response.status_code == 200
 
 # ============ DELETE ============ #
 

@@ -1,0 +1,2 @@
+ALTER TABLE tasks 
+ADD FOREIGN KEY (user_id) BINARY(16) REFERENCES users(uuid) ON DELETE;

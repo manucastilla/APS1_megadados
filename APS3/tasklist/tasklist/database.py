@@ -21,7 +21,7 @@ class DBSession:
 
 #################################################
     def read_users(self, completed: bool = None):
-        query = 'SELECT BIN_TO_UUID(uuid), user, surename FROM users'
+        query = 'SELECT BIN_TO_UUID(uuid), user, surname FROM users'
         
 
         with self.connection.cursor() as cursor:
@@ -124,8 +124,9 @@ class DBSession:
             uuid_: Task(
                 description=field_description,
                 completed=bool(field_completed),
+                user_id = field_user_id
             )
-            for uuid_, field_description, field_completed in db_results
+            for uuid_, field_description, field_completed, field_user_id in db_results
         }
 
     def create_task(self, item: Task):
@@ -133,8 +134,8 @@ class DBSession:
 
         with self.connection.cursor() as cursor:
             cursor.execute(
-                'INSERT INTO tasks VALUES (UUID_TO_BIN(%s), %s, %s)',
-                (str(uuid_), item.description, item.completed),
+                'INSERT INTO tasks VALUES (UUID_TO_BIN(%s), %s, %s, UUID_TO_BIN(%s))',
+                (str(uuid_), item.description, item.completed, str(item.user_id)),
             )
         self.connection.commit()
 

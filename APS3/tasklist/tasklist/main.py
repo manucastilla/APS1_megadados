@@ -8,6 +8,13 @@ tags_metadata = [
         'name': 'task',
         'description': 'Operations related to tasks.',
     },
+
+    {
+        'name' : 'name',
+        'surname' : 'surname',
+        'description' : 'name and surname of user'
+
+    }
 ]
 
 app = FastAPI(
@@ -17,3 +24,4 @@ app = FastAPI(
 )
 
 app.include_router(task.router, prefix='/task', tags=['task'])
+app.include_router(task.router, prefix='/user', tags=['user'])

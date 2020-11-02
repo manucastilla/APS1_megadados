@@ -99,12 +99,12 @@ def test_create_and_read_some_users():
     #     assert response.status_code == 200
     #     assert response.json() == get_expected_responses_with_uuid(completed)
 
-    # Delete all tasks.
+    # Delete all users.
     for uuid_ in uuids:
         response = client.delete(f'/user/{uuid_}')
         assert response.status_code == 200
 
-    # Check whether there are no more tasks.
+    # Check whether there are no more users.
     response = client.get('/user')
     assert response.status_code == 200
     assert response.json() == {}
@@ -117,21 +117,34 @@ def test_create_and_read_some_users():
 
 def test_read_tasks_with_no_task():
     setup_database()
-    response = client.get('/task')
+    response = client.get("/task")
     assert response.status_code == 200
     assert response.json() == {}
 
 
+
 def test_create_and_read_some_tasks():
     setup_database()
+
+    user = {
+        'name' : 'duda',
+        'surname' : 'castilla'
+    }
+
+    response = client.post("/user", json=user)
+    assert response.status_code == 200
+    userID = response.json()
+
     tasks = [
         {
             "name": "foo",
-            "completed": False
+            "completed": False,
+            "user_id" :userID,
         },
         {
             "description": "bar",
-            "completed": True
+            "completed": True,
+            "user_id" :userID ,
         },
         {
             "description": "baz"
@@ -144,23 +157,28 @@ def test_create_and_read_some_tasks():
     expected_responses = [
         {
             'description': 'foo',
-            'completed': False
+            'completed': False,
+            "user_id" :userID ,
         },
         {
             'description': 'bar',
-            'completed': True
+            'completed': True,
+            "user_id" :userID ,
         },
         {
             'description': 'baz',
-            'completed': False
+            'completed': False,
+            "user_id" :userID ,
         },
         {
             'description': 'no description',
-            'completed': True
+            'completed': True,
+            "user_id" :userID ,
         },
         {
             'description': 'no description',
-            'completed': False
+            'completed': False,
+            "user_id" :userID ,
         },
     ]
 

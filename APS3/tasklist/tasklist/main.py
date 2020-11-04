@@ -10,7 +10,7 @@ tags_metadata = [
 
     {
         'name' : 'user',
-        'description' : 'name and surname of user'
+        'description' : 'name and username of user'
 
     }
 ]

@@ -24,6 +24,7 @@ class Task(BaseModel):
             'example': {
                 'description': 'Buy baby diapers',
                 'completed': False,
+                'user_id' : '790ac2f1-983b-4a37-87de-26ce642cfaae',
             }
         }
 
@@ -33,8 +34,17 @@ class User(BaseModel):
         name='name',
         max_length=1024,
     )
-    surname: Optional[str] = Field(
-        'no surname',
-        surname='surname',
+    username: Optional[str] = Field(
+        'no username',
+        username='username',
         max_length= 1024,
     )
+
+    class Config:
+        schema_extra = {
+            'example': {
+                'name': 'Manuela',
+                'username': 'Castilla',
+                
+            }
+        }

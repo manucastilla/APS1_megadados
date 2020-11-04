@@ -16,8 +16,8 @@ router = APIRouter()
     description='Reads the whole user list.',
     response_model=Dict[uuid.UUID, User],
 )
-async def read_users(completed: bool = None, db: DBSession = Depends(get_db)):
-    return db.read_users(completed)
+async def read_users(db: DBSession = Depends(get_db)):
+    return db.read_users()
 
 
 @router.post(

@@ -79,6 +79,20 @@ class DBSession:
             )
         self.connection.commit()
 
+    def replace_user(self, uuid_, item):
+        if not self.__user_exists(uuid_):
+            raise KeyError()
+
+        with self.connection.cursor() as cursor:
+            cursor.execute(
+                """
+                UPDATE users SET name= %s, username=%s
+                WHERE uuid=UUID_TO_BIN(%s)
+                """,
+                (item.name, item.username, str(uuid_)),
+            )
+        self.connection.commit()
+        
     def remove_user(self, uuid_):
         if not self.__user_exists(uuid_):
             raise KeyError()
@@ -93,20 +107,6 @@ class DBSession:
     def remove_all_users(self):
         with self.connection.cursor() as cursor:
             cursor.execute('DELETE FROM users')
-        self.connection.commit()
-
-    def replace_user(self, uuid_, item):
-        if not self.__user_exists(uuid_):
-            raise KeyError()
-
-        with self.connection.cursor() as cursor:
-            cursor.execute(
-                """
-                UPDATE users SET name= %s, username=%s
-                WHERE uuid=UUID_TO_BIN(%s)
-                """,
-                (item.name, item.username, str(uuid_)),
-            )
         self.connection.commit()
 
     def __user_exists(self, uuid_: uuid.UUID):

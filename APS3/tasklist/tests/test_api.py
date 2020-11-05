@@ -32,6 +32,12 @@ def test_read_main_returns_not_found():
     assert response.json() == {'detail': 'Not Found'}
 
 #######################################
+def test_read_user_with_no_user():
+    setup_database()
+    response = client.get("/user")
+    assert response.status_code == 200
+    assert response.json() == {}
+
 def test_create_and_read_some_users():
     setup_database()
     users = [
@@ -89,12 +95,6 @@ def test_create_and_read_some_users():
     assert response.status_code == 200
     assert response.json() == get_expected_responses_with_uuid()
 
-    # # Read only completed tasks.
-    # for completed in [False, True]:
-    #     response = client.get(f'/task?completed={str(completed)}')
-    #     assert response.status_code == 200
-    #     assert response.json() == get_expected_responses_with_uuid(completed)
-
     # Delete all users.
     for uuid_ in uuids:
         response = client.delete(f'/user/{uuid_}')
@@ -105,12 +105,6 @@ def test_create_and_read_some_users():
     assert response.status_code == 200
     assert response.json() == {}
 
-
-def test_read_users_with_no_user():
-    setup_database()
-    response = client.get("/user")
-    assert response.status_code == 200
-    assert response.json() == {}
 
 def test_substitute_user():
     setup_database()
@@ -242,7 +236,7 @@ def test_create_and_read_some_tasks():
     user = {
         'name' : 'duda',
         'username' : 'castilla',
-    }
+        }
 
     response = client.post("/user", json=user)
     assert response.status_code == 200
